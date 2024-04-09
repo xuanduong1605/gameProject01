@@ -10,6 +10,7 @@
                 "D:\\SDL2Project\\Project\\src\\*.cpp",
                 "-ID:\\SDL2Project\\Project\\header\\",
                 "-ID:\\SDL2Project\\Project\\MinGW\\include",
+                "-ID:\\SDL2Project\\Project\\include",
                 "-lmingw32",
                 "-lSDL2main",
                 "-lSDL2",

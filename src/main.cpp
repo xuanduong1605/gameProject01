@@ -1,51 +1,34 @@
-#include <bits/stdc++.h>
+#include <iostream>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-const int screenWidth = 1280;
-const int screenHeight = 720;
+#include <renderWindow.h>
 
-SDL_Window* gameWindow = NULL;
+renderWindow gameWindow;
 
-SDL_Surface* gameScreenSurface = NULL;
-SDL_Surface* backgroundImage = NULL;
-
-SDL_Renderer* screenRenderer = NULL;
-
+bool gameRunning = 1;
 
 int main (int argc, char **argv) {
-    if (SDL_Init(SDL_INIT_EVERYTHING)) {
-        printf("Can't init sdl\n");
-        exit(0);
+
+    if (SDL_Init(SDL_INIT_VIDEO) > 0) {
+        std::cout << "Video failed to init. Error: " << SDL_GetError() << '\n';
     }
 
-    gameWindow = SDL_CreateWindow("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, 0);
-
-    screenRenderer = SDL_CreateRenderer(gameWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
-
-    bool quitGame = 0;
+    gameWindow.createWindow("Test", 1280, 720);
 
     SDL_Event e;
 
-    while (!quitGame) {
+    while (gameRunning) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
-                quitGame = 1;
+                gameRunning = 0;
             }
-
-            SDL_SetRenderDrawColor(screenRenderer,0,0,0,0);
-            SDL_RenderClear(screenRenderer);
-
-            SDL_SetRenderDrawColor(screenRenderer,255,0,0,255);
-            SDL_RenderDrawLine(screenRenderer,20,20,50,50);
-
-            SDL_Rect rect = {50,50,100,200};
-            SDL_SetRenderDrawColor(screenRenderer,0,255,0,255);
-            SDL_RenderFillRect(screenRenderer,&rect);
-
-            SDL_RenderPresent(screenRenderer);
-            SDL_Delay(20);
-        }
+        } 
     }
+
+    gameWindow.cleanUp();
+    SDL_Quit();
+
     return 0;
 }

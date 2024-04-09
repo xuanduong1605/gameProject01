@@ -5,11 +5,16 @@
 
 class renderWindow {
     private:
+
         SDL_Window* gameWindow;
         SDL_Renderer* gameRenderer;
+
     public:
+
         renderWindow();
 
-        void RenderWindow(const char* windowTitle, int windowWidth, int windowHeight);
+        void createWindow(const char* windowTitle, int windowWidth, int windowHeight);
+
+        void cleanUp();
     
 };
