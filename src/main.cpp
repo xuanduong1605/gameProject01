@@ -11,11 +11,13 @@ bool gameRunning = 1;
 
 int main (int argc, char **argv) {
 
-    if (SDL_Init(SDL_INIT_VIDEO) > 0) {
-        std::cout << "Video failed to init. Error: " << SDL_GetError() << '\n';
-    }
+    SDL_Init(SDL_INIT_VIDEO);
 
     gameWindow.createWindow("Test", 1280, 720);
+
+    std::string basePath = std::string(SDL_GetBasePath());
+
+    SDL_Texture* catImage = gameWindow.loadTexture((basePath + "data/images/cat.png").c_str());
 
     SDL_Event e;
 
@@ -25,6 +27,10 @@ int main (int argc, char **argv) {
                 gameRunning = 0;
             }
         } 
+
+        gameWindow.clearRenderer();
+        gameWindow.renderTexture(catImage);
+        gameWindow.displayTexture();
     }
 
     gameWindow.cleanUp();

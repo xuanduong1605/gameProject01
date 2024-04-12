@@ -16,5 +16,13 @@ class renderWindow {
         void createWindow(const char* windowTitle, int windowWidth, int windowHeight);
 
         void cleanUp();
+
+        void clearRenderer();
+
+        SDL_Texture* loadTexture (const char* filePath);
+
+        void renderTexture(SDL_Texture* currentTexture);
+
+        void displayTexture();
     
 };
