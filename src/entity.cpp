@@ -9,25 +9,41 @@ Entity::Entity () {
 
 }
 
-Entity::Entity (float _x, float _y, SDL_Texture* _Texture) {
-    xPos = _x;
-    yPos = _y;
-    currentTexture = _Texture;
-    currentFrame = {0, 0, 0, 0};
+Entity::Entity (Vector2d _Pos, SDL_Texture* _Texture) {
+    pos = _Pos;
+    texture = _Texture;
+    frame = {0, 0, 32, 32};
+    
 }
 
-float Entity::getX () {
-    return xPos;
+Vector2d Entity::getPos() {
+    return pos;
 }
 
-float Entity::getY () {
-    return yPos;
+void Entity::setPos (Vector2d _Pos) {
+    pos = _Pos;
+}
+
+float Entity::getAngle () {
+    return angle;
+}
+
+void Entity::setAngle (float _Angle) {
+    angle = _Angle;
+}
+
+Vector2d Entity::getScale () {
+    return scale;
+}
+
+void Entity::setScale (Vector2d _Scale) {
+    scale = _Scale;
 }
 
 SDL_Texture* Entity::getTexture () {
-    return currentTexture;
+    return texture;
 }
 
 SDL_Rect Entity::getFrame () {
-    return currentFrame;
+    return frame;
 }

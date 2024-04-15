@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 
 #include <entity.h>
@@ -23,9 +24,11 @@ class renderWindow {
 
         SDL_Texture* loadTexture (const char* _filePath);
 
-        void renderTexture(Entity _Entity);
+        void renderEntity(Entity& _Entity);
 
-        void renderTexture(SDL_Texture* _Texture);
+        void renderTexture(int _X, int _Y, SDL_Texture* _Texture);
+
+        void renderText(float _X, float _Y, const char* _Text, TTF_Font* _Font, SDL_Color _TextColor);
 
         void displayTexture();
     

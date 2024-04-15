@@ -5,25 +5,37 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include <vector2d.h>
+
 class Entity {
     private:
 
-        float xPos, yPos;
-        SDL_Rect currentFrame;
-        SDL_Texture* currentTexture;
+        Vector2d pos;
+        float angle;
+        Vector2d scale = Vector2d(1, 1);
+
+        SDL_Rect frame;
+        SDL_Texture* texture;
 
     public:
 
         Entity();
 
-        Entity(float _x, float _y, SDL_Texture* _Texture);
+        Entity(Vector2d _Pos, SDL_Texture* _Texture);
 
-        float getX();
+        Vector2d getPos();
 
-        float getY();
+        void setPos(Vector2d _Pos);
+
+        float getAngle();
+
+        void setAngle(float _Angle);
+
+        Vector2d getScale();
+
+        void setScale(Vector2d _Scale);
 
         SDL_Texture* getTexture();
 
         SDL_Rect getFrame();
-
 };

@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <vector2d.h>
 #include <entity.h>
 #include <renderWindow.h>
 
@@ -21,9 +22,9 @@ int main (int argc, char **argv) {
 
     std::string basePath = std::string(SDL_GetBasePath());
 
-    SDL_Texture* myCat = gameWindow.loadTexture((basePath + "data/images/cat.png").c_str());
+    SDL_Texture* ball = gameWindow.loadTexture((basePath + "data/images/ball.png").c_str());
 
-    Entity cat(100, 50, myCat);
+    Entity Ball (Vector2d(100, 50), ball);
 
     SDL_Event e;
 
@@ -34,11 +35,7 @@ int main (int argc, char **argv) {
             }
         } 
 
-        gameWindow.clearRenderer();
-
-        gameWindow.renderTexture(cat);
-
-        gameWindow.displayTexture();
+        
     }
 
     gameWindow.cleanUp();
