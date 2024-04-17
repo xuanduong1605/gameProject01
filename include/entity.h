@@ -25,7 +25,7 @@ class Entity {
 
         Vector2d getPos();
 
-        void setPos(Vector2d _Pos);
+        void setPos(float _X, float _Y);
 
         float getAngle();
 

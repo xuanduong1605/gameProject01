@@ -13,15 +13,16 @@ Entity::Entity (Vector2d _Pos, SDL_Texture* _Texture) {
     pos = _Pos;
     texture = _Texture;
     frame = {0, 0, 32, 32};
-    
+    SDL_QueryTexture(_Texture, NULL, NULL, &frame.w, &frame.h);
 }
 
 Vector2d Entity::getPos() {
     return pos;
 }
 
-void Entity::setPos (Vector2d _Pos) {
-    pos = _Pos;
+void Entity::setPos (float _X, float _Y) {
+    pos.x = _X;
+    pos.y = _Y;
 }
 
 float Entity::getAngle () {

@@ -10,7 +10,7 @@ renderWindow::renderWindow () {
 
 }
 
-void renderWindow::createWindow (const char *_Title, int _Width, int _Height) {
+renderWindow::renderWindow (const char *_Title, int _Width, int _Height) {
     gameWindow = SDL_CreateWindow(_Title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _Width, _Height, SDL_WINDOW_SHOWN);
 
     if (gameWindow == NULL) {

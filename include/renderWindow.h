@@ -16,7 +16,7 @@ class renderWindow {
 
         renderWindow();
 
-        void createWindow(const char* _Title, int _Width, int _Height);
+        renderWindow(const char* _Title, int _Width, int _Height);
 
         void cleanUp();
 
