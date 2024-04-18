@@ -11,6 +11,7 @@
 const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
 const float BALL_FRICTION = 0.0001;
+const int SPEED_RATIO = -125;
 
 golfBall::golfBall (Vector2d _Pos, SDL_Texture* _Texture, SDL_Texture* _Arrow) : Entity(_Pos, _Texture) {
     dirArrow = Entity(Vector2d(0, 0), _Arrow);
@@ -59,6 +60,11 @@ float getHypotenuse (Vector2d &a) {
     return SDL_sqrt(a.x * a.x + a.y * a.y);
 }
 
+float getAbs (float &a) {
+    if (a < 0) return -a;
+    return a;
+}
+
 void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed) {
     if (mousePressed && !moving) {
         int mouseX = 0, 
@@ -74,18 +80,21 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed) {
         float deltaX = mouseX - getOrgMousePosition().x,
               deltaY = mouseY - getOrgMousePosition().y;
 
-        setVelocity(deltaX / -150, deltaY / -150);;
-        setLaunchedVelocity(deltaX / -150, deltaY / -150);
+        setVelocity(deltaX / SPEED_RATIO, deltaY / SPEED_RATIO);;
+        setLaunchedVelocity(deltaX / SPEED_RATIO, deltaY / SPEED_RATIO);
+
         velocity1D = launchedVelocity1D = getHypotenuse(getVelocity());
         if (velocity1D > 1) {
             velocity1D = 1;
             launchedVelocity1D = 1;
         }
+
         dirX = velocity2D.x > 0 ? 1 : -1;
         dirY = velocity2D.y > 0 ? 1 : -1;
     }
     else {
         moving = 1;
+
         setPos(getPos().x + getVelocity().x * deltaTime, getPos().y + getVelocity().y * deltaTime);
         if (getVelocity().x > BALL_FRICTION || getVelocity().x < -BALL_FRICTION || getVelocity().y > BALL_FRICTION || getVelocity().y < -BALL_FRICTION) {
             if (velocity1D > 0) {
@@ -99,31 +108,23 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed) {
         }
         else {
             setVelocity(0, 0);
-            int mouseX = 0,
-	            mouseY = 0;
-            SDL_GetMouseState(&mouseX, &mouseY);
-            setOrgMousePosition(mouseX, mouseY);
             moving = 0;
         }
 
         if (getPos().x + getFrame().w > GAME_WIDTH) {
-            std::cout << "RIGHT" << '\n';
-            setVelocity(-abs(getVelocity().x), getVelocity().y);
+            setVelocity(-getAbs(getVelocity().x), getVelocity().y);
             dirX = -1;
         }
-        else if (getPos().x < 0) {
-            std::cout << "LEFT" << '\n';
-            setVelocity(abs(getVelocity().x), getVelocity().y);
+        if (getPos().x < 0) {
+            setVelocity(getAbs(getVelocity().x), getVelocity().y);
             dirX = 1;
         }
-        else if (getPos().y + getFrame().h > GAME_HEIGHT) {
-            std::cout << "BOTTOM" << '\n';
-            setVelocity(getVelocity().x, -abs(getVelocity().y));
+        if (getPos().y + getFrame().h > GAME_HEIGHT) {
+            setVelocity(getVelocity().x, -getAbs(getVelocity().y));
             dirY = -1;
         }
-        else if (getPos().y < 0) {
-            std::cout << "TOP" << '\n';
-            setVelocity(getVelocity().x, abs(getVelocity().y));
+        if (getPos().y < 0) {
+            setVelocity(getVelocity().x, getAbs(getVelocity().y));
             dirY = 1;
         }
     }

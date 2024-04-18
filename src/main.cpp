@@ -38,11 +38,9 @@ void Update () {
 	lastTick = currentTick;
 	currentTick = SDL_GetPerformanceCounter();
 	deltaTime = (double)((currentTick - lastTick) * 1000 / (double)SDL_GetPerformanceFrequency());
-
+	
 	mousePressed = 0;
 
-	
-	
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_QUIT:
@@ -50,20 +48,18 @@ void Update () {
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
-				std::cout << "Pressed" << '\n';
 				mouseDown = 1;
 				mousePressed = 1;
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
-				std::cout << "Released" << '\n';
 				mouseDown = 0;
 			}
 			break;
-		}
-        ball.ballUpdate(deltaTime, mouseDown, mousePressed);
+		}    
 	}
+	ball.ballUpdate(deltaTime, mouseDown, mousePressed);
 }
 
 void renderGraphics() {
