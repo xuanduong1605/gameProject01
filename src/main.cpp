@@ -16,6 +16,7 @@ renderWindow gameWindow("Gaycorn", GAME_WIDTH, GAME_HEIGHT);
 
 std::string basePath = std::string(SDL_GetBasePath());
 
+SDL_Texture* backgroundTexture = gameWindow.loadTexture((basePath + "data/images/greenbg.png").c_str());
 SDL_Texture* ballTexture = gameWindow.loadTexture((basePath + "data/images/ball.png").c_str());
 SDL_Texture* arrowTexture = gameWindow.loadTexture((basePath + "data/images/arrow.png").c_str());
 
@@ -26,9 +27,6 @@ SDL_Event event;
 bool gameRunning = 1;
 bool mouseDown = 0;
 bool mousePressed = 0;
-
-bool swingPlayed = false;
-bool secondSwingPlayed = false;
 
 Uint64 currentTick = SDL_GetPerformanceCounter();
 Uint64 lastTick = 0;
@@ -64,7 +62,11 @@ void Update () {
 
 void renderGraphics() {
 	gameWindow.clearRenderer();
+
+	gameWindow.renderTexture(0, 0, backgroundTexture);
+	gameWindow.renderEntity(ball.getArrow());
 	gameWindow.renderEntity(ball);
+
 	gameWindow.displayTexture();
 }
 

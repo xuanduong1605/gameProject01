@@ -10,8 +10,10 @@
 
 const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
-const float BALL_FRICTION = 0.0001;
 const int SPEED_RATIO = -125;
+
+const float BALL_FRICTION = 0.001;
+const float pi = 3.1415926;
 
 golfBall::golfBall (Vector2d _Pos, SDL_Texture* _Texture, SDL_Texture* _Arrow) : Entity(_Pos, _Texture) {
     dirArrow = Entity(Vector2d(0, 0), _Arrow);
@@ -25,7 +27,7 @@ Vector2d& golfBall::getOrgMousePosition () {
     return orgMousePosition;
 }
 
-Entity golfBall::getArrow () {
+Entity& golfBall::getArrow () {
     return dirArrow;
 }
 
@@ -89,11 +91,15 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed) {
             launchedVelocity1D = 1;
         }
 
+        dirArrow.setPos(getPos().x, getPos().y + 8 - 32);
+        dirArrow.setAngle(SDL_atan2(velocity2D.y, velocity2D.x) * (180 / pi) + 90);
+
         dirX = velocity2D.x > 0 ? 1 : -1;
         dirY = velocity2D.y > 0 ? 1 : -1;
     }
     else {
         moving = 1;
+        dirArrow.setPos(-100, -100);
 
         setPos(getPos().x + getVelocity().x * deltaTime, getPos().y + getVelocity().y * deltaTime);
         if (getVelocity().x > BALL_FRICTION || getVelocity().x < -BALL_FRICTION || getVelocity().y > BALL_FRICTION || getVelocity().y < -BALL_FRICTION) {

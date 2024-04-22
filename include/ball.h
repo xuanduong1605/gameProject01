@@ -39,7 +39,7 @@ class golfBall : public Entity {
 
         Vector2d& getOrgMousePosition();
 
-        Entity getArrow();
+        Entity& getArrow();
 
         int getStrokes();
 
