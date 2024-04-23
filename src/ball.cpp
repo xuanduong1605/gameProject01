@@ -12,7 +12,7 @@ const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
 const int SPEED_RATIO = -125;
 
-const float BALL_FRICTION = 0.001;
+const float BALL_FRICTION = 0.0005;
 const float pi = 3.1415926;
 
 golfBall::golfBall (Vector2d _Pos, SDL_Texture* _Texture, SDL_Texture* _Arrow) : Entity(_Pos, _Texture) {
