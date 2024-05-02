@@ -23,7 +23,7 @@ class Entity {
 
         Entity(Vector2d _Pos, SDL_Texture* _Texture);
 
-        Vector2d getPos();
+        Vector2d& getPos();
 
         void setPos(float _X, float _Y);
 

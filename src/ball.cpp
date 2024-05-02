@@ -7,12 +7,14 @@
 #include <vector2d.h>
 #include <entity.h>
 #include <ball.h>
+#include <hole.h>
 
 const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
 const int SPEED_RATIO = -125;
 
 const float BALL_FRICTION = 0.0005;
+const float BALL_DOWNSCALE = 0.002;
 const float pi = 3.1415926;
 
 golfBall::golfBall (Vector2d _Pos, SDL_Texture* _Texture, SDL_Texture* _Arrow) : Entity(_Pos, _Texture) {
@@ -67,7 +69,30 @@ float getAbs (float &a) {
     return a;
 }
 
-void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed) {
+void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole) {
+    if (win) {
+        if (getPos().x < target.x) {
+            setPos(getPos().x += 0.1 * deltaTime, getPos().y);
+        }
+        else if (getPos().x > target.x) {
+            setPos(getPos().x -= 0.1 * deltaTime, getPos().y);
+        }
+        if (getPos().y < target.y) {
+            setPos(getPos().x, getPos().y += 0.1 * deltaTime);
+        }
+        else if (getPos().y > target.y) {
+            setPos(getPos().x, getPos().y -= 0.1 * deltaTime);
+        }
+        setScale(Vector2d(getScale().x - BALL_DOWNSCALE * deltaTime, getScale().y - BALL_DOWNSCALE * deltaTime));
+        return;
+    }
+    
+    if (getPos().x + 4 > hole.getPos().x && getPos().x + 16 < hole.getPos().x + 20 && getPos().y + 4 > hole.getPos().y && getPos().y + 16 < hole.getPos().y + 20 && velocity1D < 0.5) {
+        setWin(1);
+        target.x = hole.getPos().x ;
+        target.y = hole.getPos().y + 3;
+    }
+
     if (mousePressed && !moving) {
         int mouseX = 0, 
             mouseY = 0;
@@ -91,6 +116,8 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed) {
             launchedVelocity1D = 1;
         }
 
+        std::cout << getVelocity().x << ' ' << getVelocity().y << '\n';
+
         dirArrow.setPos(getPos().x, getPos().y + 8 - 32);
         dirArrow.setAngle(SDL_atan2(velocity2D.y, velocity2D.x) * (180 / pi) + 90);
 
@@ -101,6 +128,7 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed) {
         moving = 1;
         dirArrow.setPos(-100, -100);
 
+        std::cout << getVelocity().x << ' ' << getVelocity().y << '\n';
         setPos(getPos().x + getVelocity().x * deltaTime, getPos().y + getVelocity().y * deltaTime);
         if (getVelocity().x > BALL_FRICTION || getVelocity().x < -BALL_FRICTION || getVelocity().y > BALL_FRICTION || getVelocity().y < -BALL_FRICTION) {
             if (velocity1D > 0) {
@@ -109,8 +137,8 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed) {
             else {
                 velocity1D = 0;
             }
-            velocity2D.x = (velocity1D / launchedVelocity1D) * abs(launchedVelocity2D.x) * dirX;
-            velocity2D.y = (velocity1D / launchedVelocity1D) * abs(launchedVelocity2D.y) * dirY;
+            velocity2D.x = (velocity1D / launchedVelocity1D) * getAbs(launchedVelocity2D.x) * dirX;
+            velocity2D.y = (velocity1D / launchedVelocity1D) * getAbs(launchedVelocity2D.y) * dirY;
         }
         else {
             setVelocity(0, 0);

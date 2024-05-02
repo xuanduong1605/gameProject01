@@ -8,6 +8,7 @@
 #include <entity.h>
 #include <renderWindow.h>
 #include <ball.h>
+#include <hole.h>
 
 const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
@@ -19,8 +20,10 @@ std::string basePath = std::string(SDL_GetBasePath());
 SDL_Texture* backgroundTexture = gameWindow.loadTexture((basePath + "data/images/greenbg.png").c_str());
 SDL_Texture* ballTexture = gameWindow.loadTexture((basePath + "data/images/ball.png").c_str());
 SDL_Texture* arrowTexture = gameWindow.loadTexture((basePath + "data/images/arrow.png").c_str());
+SDL_Texture* holeTexture = gameWindow.loadTexture((basePath + "data/images/hole.png").c_str());
 
 golfBall ball(Vector2d(0, 0), ballTexture, arrowTexture);
+golfHole hole(Vector2d(0, 0), holeTexture);
 
 SDL_Event event;
 
@@ -57,13 +60,14 @@ void Update () {
 			break;
 		}    
 	}
-	ball.ballUpdate(deltaTime, mouseDown, mousePressed);
+	ball.ballUpdate(deltaTime, mouseDown, mousePressed, hole);
 }
 
 void renderGraphics() {
 	gameWindow.clearRenderer();
 
 	gameWindow.renderTexture(0, 0, backgroundTexture);
+	gameWindow.renderEntity(hole);
 	gameWindow.renderEntity(ball.getArrow());
 	gameWindow.renderEntity(ball);
 
@@ -76,6 +80,7 @@ int main (int argc, char **argv) {
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
 
+	hole.setPos(512, 512);
 	ball.setPos(256, 512);
 	 
     while (gameRunning) {

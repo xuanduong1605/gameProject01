@@ -16,7 +16,7 @@ Entity::Entity (Vector2d _Pos, SDL_Texture* _Texture) {
     SDL_QueryTexture(_Texture, NULL, NULL, &frame.w, &frame.h);
 }
 
-Vector2d Entity::getPos() {
+Vector2d& Entity::getPos() {
     return pos;
 }
 
