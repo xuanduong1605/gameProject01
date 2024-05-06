@@ -20,7 +20,7 @@ class golfBall : public Entity {
         float velocity1D;
         float launchedVelocity1D;
 
-        bool playSwingFx = 1;
+        bool playedSwingSound = 1;
         bool win = 0;
         bool moving = 0;
 
@@ -53,6 +53,6 @@ class golfBall : public Entity {
 
         void setLaunchedVelocity(float _X, float _Y); 
 
-        void ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole);
+        void ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, Mix_Chunk* holeSound, Mix_Chunk* hitSound);
 
 };

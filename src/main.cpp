@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 #include <vector2d.h>
 #include <entity.h>
@@ -21,6 +22,9 @@ SDL_Texture* backgroundTexture = gameWindow.loadTexture((basePath + "data/images
 SDL_Texture* ballTexture = gameWindow.loadTexture((basePath + "data/images/ball.png").c_str());
 SDL_Texture* arrowTexture = gameWindow.loadTexture((basePath + "data/images/arrow.png").c_str());
 SDL_Texture* holeTexture = gameWindow.loadTexture((basePath + "data/images/hole.png").c_str());
+
+Mix_Chunk* swingSound = Mix_LoadWAV((basePath + "data/audio/hit.wav").c_str());
+Mix_Chunk* holeSound = Mix_LoadWAV((basePath + "data/audio/hole.wav").c_str());
 
 golfBall ball(Vector2d(0, 0), ballTexture, arrowTexture);
 golfHole hole(Vector2d(0, 0), holeTexture);
@@ -60,7 +64,10 @@ void Update () {
 			break;
 		}    
 	}
-	ball.ballUpdate(deltaTime, mouseDown, mousePressed, hole);
+	if (swingSound == NULL) {
+		printf( "Failed to load sound! SDL_mixer Error: %s\n", Mix_GetError() );
+	}
+	ball.ballUpdate(deltaTime, mouseDown, mousePressed, hole, holeSound, swingSound);
 }
 
 void renderGraphics() {
@@ -79,6 +86,7 @@ int main (int argc, char **argv) {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
 	hole.setPos(512, 512);
 	ball.setPos(256, 512);

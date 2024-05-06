@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 #include <vector2d.h>
 #include <entity.h>
@@ -69,7 +70,7 @@ float getAbs (float &a) {
     return a;
 }
 
-void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole) {
+void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, Mix_Chunk* holeSound, Mix_Chunk* swingSound) {
     if (win) {
         if (getPos().x < target.x) {
             setPos(getPos().x += 0.1 * deltaTime, getPos().y);
@@ -88,12 +89,14 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, g
     }
     
     if (getPos().x + 4 > hole.getPos().x && getPos().x + 16 < hole.getPos().x + 20 && getPos().y + 4 > hole.getPos().y && getPos().y + 16 < hole.getPos().y + 20 && velocity1D < 0.5) {
+        Mix_PlayChannel(-1, holeSound, 0);
         setWin(1);
         target.x = hole.getPos().x ;
         target.y = hole.getPos().y + 3;
     }
 
     if (mousePressed && !moving) {
+        playedSwingSound = 0;
         int mouseX = 0, 
             mouseY = 0;
         SDL_GetMouseState(&mouseX, &mouseY);
@@ -116,8 +119,6 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, g
             launchedVelocity1D = 1;
         }
 
-        std::cout << getVelocity().x << ' ' << getVelocity().y << '\n';
-
         dirArrow.setPos(getPos().x, getPos().y + 8 - 32);
         dirArrow.setAngle(SDL_atan2(velocity2D.y, velocity2D.x) * (180 / pi) + 90);
 
@@ -125,10 +126,15 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, g
         dirY = velocity2D.y > 0 ? 1 : -1;
     }
     else {
+        if (!playedSwingSound) {
+            std::cout << "Sound played." << '\n';
+            Mix_PlayChannel(-1, swingSound, 0);
+            playedSwingSound = 1;
+            strokes++;
+        }
         moving = 1;
         dirArrow.setPos(-100, -100);
 
-        std::cout << getVelocity().x << ' ' << getVelocity().y << '\n';
         setPos(getPos().x + getVelocity().x * deltaTime, getPos().y + getVelocity().y * deltaTime);
         if (getVelocity().x > BALL_FRICTION || getVelocity().x < -BALL_FRICTION || getVelocity().y > BALL_FRICTION || getVelocity().y < -BALL_FRICTION) {
             if (velocity1D > 0) {
