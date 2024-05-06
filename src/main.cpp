@@ -23,8 +23,8 @@ SDL_Texture* ballTexture = gameWindow.loadTexture((basePath + "data/images/ball.
 SDL_Texture* arrowTexture = gameWindow.loadTexture((basePath + "data/images/arrow.png").c_str());
 SDL_Texture* holeTexture = gameWindow.loadTexture((basePath + "data/images/hole.png").c_str());
 
-Mix_Chunk* swingSound = Mix_LoadWAV((basePath + "data/audio/hit.wav").c_str());
-Mix_Chunk* holeSound = Mix_LoadWAV((basePath + "data/audio/hole.wav").c_str());
+Mix_Chunk* swingSound = nullptr;
+Mix_Chunk* holeSound = nullptr;
 
 golfBall ball(Vector2d(0, 0), ballTexture, arrowTexture);
 golfHole hole(Vector2d(0, 0), holeTexture);
@@ -83,11 +83,14 @@ void renderGraphics() {
 
 int main (int argc, char **argv) {
 
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
 	Mix_Init(MIX_INIT_WAVPACK);
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
+	swingSound = Mix_LoadWAV((basePath + "data/audio/hit.wav").c_str());
+	holeSound = Mix_LoadWAV((basePath + "data/audio/hole.wav").c_str());
 
 	hole.setPos(512, 512);
 	ball.setPos(256, 512);

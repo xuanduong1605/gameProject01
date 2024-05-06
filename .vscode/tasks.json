@@ -17,6 +17,7 @@
                 "-lSDL2_image",
                 "-lSDL2_mixer",
                 "-lSDL2_ttf",
+                "-lwavpackdll",
                 "-o",
                 "D:\\SDL2Project\\Project\\game.exe"
             ],
