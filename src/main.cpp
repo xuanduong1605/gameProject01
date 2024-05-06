@@ -86,6 +86,7 @@ int main (int argc, char **argv) {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
+	Mix_Init(MIX_INIT_WAVPACK);
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
 	hole.setPos(512, 512);
