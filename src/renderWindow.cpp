@@ -6,6 +6,9 @@
 #include <renderWindow.h>
 #include <entity.h>
 
+const int GAME_WIDTH = 1280;
+const int GAME_HEIGHT = 720;
+
 renderWindow::renderWindow () {
 
 }
@@ -61,10 +64,6 @@ void renderWindow::renderTexture (int _X, int _Y, SDL_Texture* _Texture) {
 	SDL_RenderCopy(gameRenderer, _Texture, &src, &dst);
 }
 
-void renderWindow::displayTexture () {
-    SDL_RenderPresent(gameRenderer);
-}
-
 void renderWindow::renderText (float _X, float _Y, const char* _Text, TTF_Font* _Font, SDL_Color _TextColor) {
     SDL_Surface* surface = TTF_RenderText_Blended(_Font, _Text, _TextColor);
     SDL_Texture* message = SDL_CreateTextureFromSurface(gameRenderer, surface);
@@ -84,4 +83,29 @@ void renderWindow::renderText (float _X, float _Y, const char* _Text, TTF_Font* 
     SDL_RenderCopy(gameRenderer, message, &src, &dst);
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(message);
+}
+
+void renderWindow::renderTextCenter (float _Y, const char* _Text, TTF_Font* _Font, SDL_Color _TextColor) {
+    SDL_Surface* surface = TTF_RenderText_Blended(_Font, _Text, _TextColor);
+    SDL_Texture* message = SDL_CreateTextureFromSurface(gameRenderer, surface);
+
+    SDL_Rect src;
+    src.x = 0;
+    src.y = 0;
+    src.w = surface->w;
+    src.h = surface->h; 
+
+    SDL_Rect dst;
+    dst.x = GAME_WIDTH / 2 - src.w / 2;
+	dst.y = GAME_HEIGHT / 2 - src.h / 2 + _Y;
+    dst.w = src.w;
+    dst.h = src.h;
+
+    SDL_RenderCopy(gameRenderer, message, &src, &dst);
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(message);
+}
+
+void renderWindow::displayTexture () {
+    SDL_RenderPresent(gameRenderer);
 }

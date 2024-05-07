@@ -30,6 +30,8 @@ class renderWindow {
 
         void renderText(float _X, float _Y, const char* _Text, TTF_Font* _Font, SDL_Color _TextColor);
 
+        void renderTextCenter (float _Y, const char* _Text, TTF_Font* _Font, SDL_Color _TextColor);
+
         void displayTexture();
     
 };

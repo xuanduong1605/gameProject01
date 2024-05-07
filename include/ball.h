@@ -53,6 +53,6 @@ class golfBall : public Entity {
 
         void setLaunchedVelocity(float _X, float _Y); 
 
-        void ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, Mix_Chunk* holeSound, Mix_Chunk* hitSound);
+        void ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, Mix_Chunk* holeSound, Mix_Chunk* hitSound, Mix_Chunk* collideSound);
 
 };

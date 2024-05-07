@@ -70,7 +70,7 @@ float getAbs (float &a) {
     return a;
 }
 
-void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, Mix_Chunk* holeSound, Mix_Chunk* swingSound) {
+void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, Mix_Chunk* holeSound, Mix_Chunk* swingSound, Mix_Chunk* collideSound) {
     if (win) {
         if (getPos().x < target.x) {
             setPos(getPos().x += 0.1 * deltaTime, getPos().y);
@@ -152,18 +152,26 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, g
         }
 
         if (getPos().x + getFrame().w > GAME_WIDTH) {
+            std::cout << "RIGHT" << '\n';
+            Mix_PlayChannel(-1, collideSound, 0);
             setVelocity(-getAbs(getVelocity().x), getVelocity().y);
             dirX = -1;
         }
         if (getPos().x < 0) {
+            std::cout << "LEFT" << '\n';
+            Mix_PlayChannel(-1, collideSound, 0);
             setVelocity(getAbs(getVelocity().x), getVelocity().y);
             dirX = 1;
         }
         if (getPos().y + getFrame().h > GAME_HEIGHT) {
+            std::cout << "BOTTOM" << '\n';
+            Mix_PlayChannel(-1, collideSound, 0);
             setVelocity(getVelocity().x, -getAbs(getVelocity().y));
             dirY = -1;
         }
         if (getPos().y < 0) {
+            std::cout << "TOP" << '\n';
+            Mix_PlayChannel(-1, collideSound, 0);
             setVelocity(getVelocity().x, getAbs(getVelocity().y));
             dirY = 1;
         }
