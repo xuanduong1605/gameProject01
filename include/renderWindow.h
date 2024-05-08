@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 
+#include <ball.h>
 #include <entity.h>
 
 class renderWindow {
@@ -33,5 +34,4 @@ class renderWindow {
         void renderTextCenter (float _Y, const char* _Text, TTF_Font* _Font, SDL_Color _TextColor);
 
         void displayTexture();
-    
 };

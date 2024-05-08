@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 
 #include <renderWindow.h>
+#include <ball.h>
 #include <entity.h>
 
 const int GAME_WIDTH = 1280;

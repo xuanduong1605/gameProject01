@@ -49,6 +49,7 @@ bool mouseDown = 0;
 bool mousePressed = 0;
 
 int currentScreen = 0; // 0 = start, 1 = in-game, 2 = end game.
+int level = 1;
 
 Uint64 currentTick = SDL_GetPerformanceCounter();
 Uint64 lastTick = 0;
@@ -75,9 +76,40 @@ void mainMenu() {
 	gameWindow.clearRenderer();
 	gameWindow.renderTexture(0, 0, backgroundTexture);
 	gameWindow.renderTexture(640 - 267, 360 - 205 - 40 + 20 * SDL_sin(SDL_GetTicks()* (pi / 1500)), logoTexture);
-	// window.render(0, 0, click2start);
 	gameWindow.renderTextCenter(300, "CLICK TO START", font32, darkGreen);
 	gameWindow.displayTexture();
+}
+
+void loadLevel() {
+	if (level > 4) {
+		currentScreen = 2;
+		return;
+	}
+	ball.setVelocity(0, 0);
+	ball.setScale(Vector2d(1, 1));
+	ball.setWin(0);
+	switch (level) {
+
+		case 1:
+			ball.setPos(512, 512);
+			hole.setPos(1000, 200);
+		break;
+
+		case 2:
+			ball.setPos(512, 512);
+			hole.setPos(1000, 200);
+		break;
+
+		case 3:
+			ball.setPos(512, 512);
+			hole.setPos(1000, 200);
+		break;
+
+		case 4:
+			ball.setPos(512, 512);
+			hole.setPos(1000, 200);
+		break;
+	}
 }
 
 void Update () {	
@@ -106,6 +138,33 @@ void Update () {
 		}    
 	}
 	ball.ballUpdate(deltaTime, mouseDown, mousePressed, hole, holeSound, swingSound, collideSound);
+	if (ball.getScale().x < -1) {
+		level++;
+		loadLevel();
+	}
+}
+
+const char* getLevelText () {
+	std::string s = std::to_string(level);
+	s = "LEVEL: " + s;
+	return s.c_str();
+}
+
+void printLevel () {
+	gameWindow.renderTextCenter(-328, getLevelText(), font32, black);
+    gameWindow.renderTextCenter(-330, getLevelText(), font32, white);
+}
+
+const char* getStrokesText () {
+	int strokes = ball.getStrokes();
+	std::string s = std::to_string(strokes);
+	s = "STROKES: " + s;
+	return s.c_str();
+}
+
+void printStrokes () {
+    gameWindow.renderTextCenter(332, getStrokesText(), font32, white);
+	gameWindow.renderTextCenter(330, getStrokesText(), font32, black);
 }
 
 void renderGraphics() {
@@ -115,6 +174,8 @@ void renderGraphics() {
 	gameWindow.renderEntity(hole);
 	gameWindow.renderEntity(ball.getArrow());
 	gameWindow.renderEntity(ball);
+	printStrokes();
+	printLevel();
 
 	gameWindow.displayTexture();
 }
@@ -136,12 +197,11 @@ int main (int argc, char **argv) {
 	font48 = TTF_OpenFont((basePath + "data/fonts/font.ttf").c_str(), 48);
 	font64 = TTF_OpenFont((basePath + "data/fonts/font.ttf").c_str(), 64);
 
-	hole.setPos(512, 512);
-	ball.setPos(256, 512);
-
 	Mix_PlayChannel(-1, backgroundMusic, 0);
 
 	bool menuMusic = 1;
+
+	loadLevel();
 
     while (gameRunning) {
 		if (!currentScreen) {
