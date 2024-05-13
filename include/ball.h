@@ -9,6 +9,7 @@
 #include <vector2d.h>
 #include <entity.h>
 #include <hole.h>
+#include <box.h>
 
 class golfBall : public Entity {
     private:
@@ -54,6 +55,6 @@ class golfBall : public Entity {
 
         void setLaunchedVelocity(float _X, float _Y); 
 
-        void ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, Mix_Chunk* holeSound, Mix_Chunk* hitSound, Mix_Chunk* collideSound);
+        void ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, std::vector <Box> boxes, Mix_Chunk* holeSound, Mix_Chunk* hitSound, Mix_Chunk* collideSound);
 
 };

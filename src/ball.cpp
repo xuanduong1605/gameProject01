@@ -70,7 +70,7 @@ float getAbs (float &a) {
     return a;
 }
 
-void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, Mix_Chunk* holeSound, Mix_Chunk* swingSound, Mix_Chunk* collideSound) {
+void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, std::vector <Box> boxes, Mix_Chunk* holeSound, Mix_Chunk* swingSound, Mix_Chunk* collideSound) {
     if (win) {
         if (getPos().x < target.x) {
             setPos(getPos().x += 0.1 * deltaTime, getPos().y);
@@ -175,5 +175,25 @@ void golfBall::ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, g
             setVelocity(getVelocity().x, getAbs(getVelocity().y));
             dirY = 1;
         }
+
+        for (Box& box : boxes) { 
+            float nxtX, nxtY;
+
+		    nxtX = getPos().x + getVelocity().x*deltaTime;
+            nxtY = getPos().y;
+            if (nxtX + 16 > box.getPos().x && nxtX < box.getPos().x + box.getFrame().w && nxtY + 16 > box.getPos().y && nxtY < box.getPos().y + box.getFrame().h) {
+                Mix_PlayChannel(-1, collideSound, 0);
+                setVelocity(getVelocity().x * (-1), getVelocity().y);
+                dirX *= -1;
+            }
+
+            nxtX = getPos().x;
+            nxtY = getPos().y + getVelocity().y*deltaTime;
+            if (nxtX + 16 > box.getPos().x && nxtX < box.getPos().x + box.getFrame().w && nxtY + 16 > box.getPos().y && nxtY < box.getPos().y + box.getFrame().h) {
+                Mix_PlayChannel(-1, collideSound, 0);
+                setVelocity(getVelocity().x, getVelocity().y * (-1));
+                dirY *= -1;
+            }
+	    }
     }
 };

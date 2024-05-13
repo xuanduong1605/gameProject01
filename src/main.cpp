@@ -10,6 +10,7 @@
 #include <renderWindow.h>
 #include <ball.h>
 #include <hole.h>
+#include <box.h>
 
 const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
@@ -24,7 +25,9 @@ SDL_Texture* backgroundTexture = gameWindow.loadTexture((basePath + "data/images
 SDL_Texture* ballTexture = gameWindow.loadTexture((basePath + "data/images/ball.png").c_str());
 SDL_Texture* arrowTexture = gameWindow.loadTexture((basePath + "data/images/arrow.png").c_str());
 SDL_Texture* holeTexture = gameWindow.loadTexture((basePath + "data/images/hole.png").c_str());
-SDL_Texture* logoTexture = gameWindow.loadTexture((basePath + "data/images/gamelogo.png").c_str()); 
+SDL_Texture* boxTexture = gameWindow.loadTexture((basePath + "data/images/box.png").c_str());
+SDL_Texture* logoTexture = gameWindow.loadTexture((basePath + "data/images/gamelogo.png").c_str());
+SDL_Texture* endgameBackgroundTexture = gameWindow.loadTexture((basePath + "data/images/end_background.png").c_str());
 
 Mix_Chunk* swingSound = nullptr;
 Mix_Chunk* holeSound = nullptr;
@@ -56,6 +59,8 @@ Uint64 lastTick = 0;
 
 double deltaTime = 0;
 
+std::vector <Box> boxes;
+
 void mainMenu() {
 	lastTick = currentTick;
 	currentTick = SDL_GetPerformanceCounter();
@@ -85,29 +90,37 @@ void loadLevel() {
 		currentScreen = 2;
 		return;
 	}
+
 	ball.setVelocity(0, 0);
 	ball.setScale(Vector2d(1, 1));
 	ball.setWin(0);
-	switch (level) {
+	boxes.clear();
 
+	switch (level) {
 		case 1:
-			ball.setPos(512, 512);
-			hole.setPos(1000, 200);
+			ball.setPos(200, 360 - 8);
+			hole.setPos(1100, 360 - 8);
 		break;
 
 		case 2:
-			ball.setPos(512, 512);
-			hole.setPos(1000, 200);
+			ball.setPos(200, 360 - 8);
+			hole.setPos(1100, 360 - 8);
+
+			boxes.push_back({Vector2d(500, 360 - 67), boxTexture});
 		break;
 
 		case 3:
-			ball.setPos(512, 512);
-			hole.setPos(1000, 200);
+			ball.setPos(200, 360 - 8);
+			hole.setPos(1100, 360 - 8);
+
+
 		break;
 
 		case 4:
-			ball.setPos(512, 512);
-			hole.setPos(1000, 200);
+			ball.setPos(200, 360 - 8);
+			hole.setPos(1100, 360 - 8);
+
+
 		break;
 	}
 }
@@ -125,7 +138,7 @@ void Update () {
 			gameRunning = 0;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_LEFT) {
+			if (event.button.button == SDL_BUTTON_LEFT) { 
 				mouseDown = 1;
 				mousePressed = 1;
 			}
@@ -137,7 +150,7 @@ void Update () {
 			break;
 		}    
 	}
-	ball.ballUpdate(deltaTime, mouseDown, mousePressed, hole, holeSound, swingSound, collideSound);
+	ball.ballUpdate(deltaTime, mouseDown, mousePressed, hole, boxes, holeSound, swingSound, collideSound);
 	if (ball.getScale().x < -1) {
 		level++;
 		loadLevel();
@@ -167,15 +180,34 @@ void printStrokes () {
 	gameWindow.renderTextCenter(330, getStrokesText(), font32, black);
 }
 
+void endMenu () {
+	gameWindow.renderTexture(0, 0, endgameBackgroundTexture);
+	gameWindow.renderTextCenter(3 - 32, "GAME OVER!", font48, black);
+	gameWindow.renderTextCenter(-32, "GAME OVER!", font48, white);
+	gameWindow.renderTextCenter(25, getStrokesText(), font32, black);
+	gameWindow.renderTextCenter(22, getStrokesText(), font32, white);
+}
+
 void renderGraphics() {
 	gameWindow.clearRenderer();
 
 	gameWindow.renderTexture(0, 0, backgroundTexture);
-	gameWindow.renderEntity(hole);
-	gameWindow.renderEntity(ball.getArrow());
-	gameWindow.renderEntity(ball);
-	printStrokes();
-	printLevel();
+
+	if (currentScreen == 1) {
+		gameWindow.renderEntity(hole);
+		gameWindow.renderEntity(ball.getArrow());
+		gameWindow.renderEntity(ball);
+
+		for (Box& box : boxes) { 
+			gameWindow.renderEntity(box);
+		}
+
+		printStrokes();
+		printLevel();
+	}
+	else {
+		endMenu();
+	}
 
 	gameWindow.displayTexture();
 }
