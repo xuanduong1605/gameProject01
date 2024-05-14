@@ -128,9 +128,9 @@ void loadLevel() {
 			backgroundTexture = sandTexture;
 			swingSound = sandSound;
 
-			boxes.push_back({Vector2d(600 - 67, 150 - 67), boxTexture});
+			boxes.push_back({Vector2d(600 - 67, 155 - 67), boxTexture});
 			boxes.push_back({Vector2d(650 - 67, 360 - 67), boxTexture});
-			boxes.push_back({Vector2d(600 - 67, 570 - 67), boxTexture});
+			boxes.push_back({Vector2d(600 - 67, 565 - 67), boxTexture});
 
 		break;
 
