@@ -95,7 +95,7 @@ template<class Scalar>
 class vector_type_desc<Scalar, 16> : public vector_type_desc<Scalar, 8>
 {
 public:
-    Scalar s8, s9, sa, sb, sc, sd, se, sf;
+    Scalar s8, s9, sa, sb, sc, sd,se, sf;
 };
 
 } // end detail namespace

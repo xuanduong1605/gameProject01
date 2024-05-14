@@ -11,7 +11,7 @@ class Entity {
     private:
 
         Vector2d pos;
-        float angle;
+        float angle = 0;
         Vector2d scale = Vector2d(1, 1);
 
         SDL_Rect frame;

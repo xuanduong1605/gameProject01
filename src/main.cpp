@@ -11,13 +11,14 @@
 #include <ball.h>
 #include <hole.h>
 #include <box.h>
+#include <sea.h>
 
 const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
 
 const double pi = 3.1415926;
 
-renderWindow gameWindow("Golf", GAME_WIDTH, GAME_HEIGHT);
+renderWindow gameWindow("Golfmania", GAME_WIDTH, GAME_HEIGHT);
 
 std::string basePath = std::string(SDL_GetBasePath());
 
@@ -28,11 +29,15 @@ SDL_Texture* holeTexture = gameWindow.loadTexture((basePath + "data/images/hole.
 SDL_Texture* boxTexture = gameWindow.loadTexture((basePath + "data/images/box.png").c_str());
 SDL_Texture* logoTexture = gameWindow.loadTexture((basePath + "data/images/gamelogo.png").c_str());
 SDL_Texture* endgameBackgroundTexture = gameWindow.loadTexture((basePath + "data/images/end_background.png").c_str());
+SDL_Texture* seaTexture = gameWindow.loadTexture((basePath + "data/images/sea.png").c_str());
+SDL_Texture* sandTexture = gameWindow.loadTexture((basePath + "data/images/sand.png").c_str());
 
 Mix_Chunk* swingSound = nullptr;
 Mix_Chunk* holeSound = nullptr;
 Mix_Chunk* collideSound = nullptr;
 Mix_Chunk* backgroundMusic = nullptr;
+Mix_Chunk* splashSound = nullptr;
+Mix_Chunk* sandSound = nullptr;
 
 TTF_Font* font32 = nullptr;
 TTF_Font* font48 = nullptr;
@@ -60,6 +65,7 @@ Uint64 lastTick = 0;
 double deltaTime = 0;
 
 std::vector <Box> boxes;
+std::vector <Sea> seas;
 
 void mainMenu() {
 	lastTick = currentTick;
@@ -95,31 +101,48 @@ void loadLevel() {
 	ball.setScale(Vector2d(1, 1));
 	ball.setWin(0);
 	boxes.clear();
+	seas.clear();
+
+	ball.setPos(125, 360 - 8);
+	hole.setPos(1100, 360 - 8);
 
 	switch (level) {
 		case 1:
-			ball.setPos(200, 360 - 8);
-			hole.setPos(1100, 360 - 8);
+
+			boxes.push_back({Vector2d(650 - 67, 360 - 67), boxTexture});
+
 		break;
 
 		case 2:
-			ball.setPos(200, 360 - 8);
-			hole.setPos(1100, 360 - 8);
 
-			boxes.push_back({Vector2d(500, 360 - 67), boxTexture});
+			boxes.push_back({Vector2d(250, 360 - 67), boxTexture});
+			boxes.push_back({Vector2d(900, 160 - 67), boxTexture});
+			boxes.push_back({Vector2d(900, 560 - 67), boxTexture});
+
+			seas.push_back({Vector2d(640 - 200, 360 - 200), seaTexture});
+
 		break;
 
 		case 3:
-			ball.setPos(200, 360 - 8);
-			hole.setPos(1100, 360 - 8);
 
+			backgroundTexture = sandTexture;
+			swingSound = sandSound;
+
+			boxes.push_back({Vector2d(600 - 67, 100 - 67), boxTexture});
+			boxes.push_back({Vector2d(650 - 67, 360 - 67), boxTexture});
+			boxes.push_back({Vector2d(600 - 67, 620 - 67), boxTexture});
 
 		break;
 
 		case 4:
-			ball.setPos(200, 360 - 8);
-			hole.setPos(1100, 360 - 8);
 
+			boxes.push_back({Vector2d(900, 160 - 67), boxTexture});
+			boxes.push_back({Vector2d(900, 560 - 67), boxTexture});
+
+			boxes.push_back({Vector2d(250, 160 - 67), boxTexture});
+			boxes.push_back({Vector2d(250, 560 - 67), boxTexture});
+
+			seas.push_back({Vector2d(640 - 200, 360 - 200), seaTexture});
 
 		break;
 	}
@@ -150,7 +173,7 @@ void Update () {
 			break;
 		}    
 	}
-	ball.ballUpdate(deltaTime, mouseDown, mousePressed, hole, boxes, holeSound, swingSound, collideSound);
+	ball.ballUpdate(deltaTime, mouseDown, mousePressed, hole, boxes, seas, holeSound, swingSound, collideSound, splashSound);
 	if (ball.getScale().x < -1) {
 		level++;
 		loadLevel();
@@ -195,12 +218,17 @@ void renderGraphics() {
 
 	if (currentScreen == 1) {
 		gameWindow.renderEntity(hole);
-		gameWindow.renderEntity(ball.getArrow());
-		gameWindow.renderEntity(ball);
-
+		
 		for (Box& box : boxes) { 
 			gameWindow.renderEntity(box);
 		}
+
+		for (Sea& sea : seas) { 
+			gameWindow.renderEntity(sea);
+		}
+		
+		gameWindow.renderEntity(ball.getArrow());
+		gameWindow.renderEntity(ball);
 
 		printStrokes();
 		printLevel();
@@ -223,6 +251,9 @@ int main (int argc, char **argv) {
 	swingSound = Mix_LoadWAV((basePath + "data/audio/hit.wav").c_str());
 	holeSound = Mix_LoadWAV((basePath + "data/audio/hole.wav").c_str());
 	collideSound = Mix_LoadWAV((basePath + "data/audio/collide.wav").c_str());
+	splashSound = Mix_LoadWAV((basePath + "data/audio/splash.wav").c_str());
+	sandSound = Mix_LoadWAV((basePath + "data/audio/sand.wav").c_str());
+
 	backgroundMusic = Mix_LoadWAV((basePath + "data/audio/backgroundmusic.wav").c_str());
 
 	font32 = TTF_OpenFont((basePath + "data/fonts/font.ttf").c_str(), 32);

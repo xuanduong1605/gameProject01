@@ -10,6 +10,7 @@
 #include <entity.h>
 #include <hole.h>
 #include <box.h>
+#include <sea.h>
 
 class golfBall : public Entity {
     private:
@@ -55,6 +56,6 @@ class golfBall : public Entity {
 
         void setLaunchedVelocity(float _X, float _Y); 
 
-        void ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, std::vector <Box> boxes, Mix_Chunk* holeSound, Mix_Chunk* hitSound, Mix_Chunk* collideSound);
+        void ballUpdate(double deltaTime, bool mouseDown, bool mousePressed, golfHole hole, std::vector <Box> boxes, std::vector <Sea> seas, Mix_Chunk* holeSound, Mix_Chunk* swingSound, Mix_Chunk* collideSound, Mix_Chunk* splashSound);
 
 };
